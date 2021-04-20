@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Currency converter</string>
+    <string name="you_send">You send</string>
+    <string name="they_get">They get</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="choose_a_currency">Choose a currency</string>
+</resources>
