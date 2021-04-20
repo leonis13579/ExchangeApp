@@ -2,6 +2,7 @@ package com.example.testapp.mvvm.viewModels;
 
 import android.app.Application;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public class ExchangeViewModel extends AndroidViewModel {
 
+    private CurrenciesRepository mRepository;
+
     private MutableLiveData<String> currencyFrom = new MutableLiveData<>("");
     private MutableLiveData<String> currencyTo = new MutableLiveData<>("");
     private MutableLiveData<Double> sumFrom = new MutableLiveData<>();
@@ -23,6 +26,8 @@ public class ExchangeViewModel extends AndroidViewModel {
 
     public ExchangeViewModel(final Application application) {
         super(application);
+
+        mRepository = new CurrenciesRepository(application);
     }
 
     public void ChangeCurrency() {
@@ -47,11 +52,16 @@ public class ExchangeViewModel extends AndroidViewModel {
         return sumTo;
     }
 
-    public void setCurrencyFrom(String currencyFrom) {
-        this.currencyFrom.setValue(currencyFrom);
+    public void setSumFrom(double sumFrom) {
+        this.sumFrom.setValue(sumFrom);
     }
 
-    public void setCurrencyTo(String currencyTo) {
-        this.currencyTo.setValue(currencyTo);
+    public void CountSumTo() {
+        if (currencyFrom.getValue() != null && !currencyFrom.getValue().isEmpty() &&
+                currencyTo.getValue() != null && !currencyTo.getValue().isEmpty()) {
+            sumTo.setValue(sumFrom.getValue() * mRepository.getCurrenciesCourse(currencyFrom.getValue(), currencyTo.getValue()));
+        } else {
+            Toast.makeText(getApplication().getApplicationContext(), "Need to choose currencies first", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -13,15 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.testapp.R;
 import com.example.testapp.adapters.viewHolders.CurrenciesViewHolder;
 import com.example.testapp.mvvm.models.Currencies;
+import com.example.testapp.mvvm.views.CurrenciesFragment;
 
 import java.util.List;
 
 public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesViewHolder> {
 
-    List<Currencies> currencies;
+    private List<String> currencies;
+    private CurrenciesFragment currenciesFragment;
 
-    public CurrenciesAdapter(LiveData<List<Currencies>> currencies) {
-        this.currencies = currencies.getValue();
+    public CurrenciesAdapter(CurrenciesFragment currenciesFragment, List<String> currencies) {
+        this.currenciesFragment = currenciesFragment;
+        this.currencies = currencies;
     }
 
     @NonNull
@@ -33,7 +36,13 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CurrenciesViewHolder holder, int position) {
-        holder.getRadioButton().setText(currencies.get(position).getName());
+        holder.getRadioButton().setText(currencies.get(position));
+        holder.getRadioButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currenciesFragment.getChangingCurrency().setValue(currencies.get(position));
+            }
+        });
     }
 
     @Override

@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,9 @@ public class ExchangeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = ExchangeFragmentBinding.inflate(inflater, container, false);
         View v = binding.getRoot();
+
+        binding.sumTo.setKeyListener(null);
+
         return v;
     }
 
@@ -43,6 +48,17 @@ public class ExchangeFragment extends Fragment {
             binding.currencyToText.setText(currency);
         });
 
+        mViewModel.getSumFrom().observe(getViewLifecycleOwner(), sumFrom -> {
+            if (mViewModel.getCurrencyTo().getValue() != null &&
+                    mViewModel.getCurrencyFrom().getValue() != null) {
+                mViewModel.CountSumTo();
+            }
+        });
+
+        mViewModel.getSumTo().observe(getViewLifecycleOwner(), sumTo -> {
+            binding.sumTo.setText(sumTo.toString());
+        });
+
 
         binding.changeCurrencies.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +70,32 @@ public class ExchangeFragment extends Fragment {
         binding.currencyFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrenciesFragment cf = new CurrenciesFragment();
+                CurrenciesFragment cf = new CurrenciesFragment(mViewModel.getCurrencyFrom());
                 cf.show(getParentFragmentManager(), "CurrencyFrom");
+            }
+        });
+
+        binding.currencyTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CurrenciesFragment cf = new CurrenciesFragment(mViewModel.getCurrencyTo());
+                cf.show(getParentFragmentManager(), "CurrencyTo");
+            }
+        });
+
+        binding.sumFrom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mViewModel.setSumFrom(s.length() > 0 ? Double.parseDouble(s.toString()) : 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }

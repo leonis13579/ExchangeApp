@@ -92,7 +92,9 @@
 
                 android:inputType="numberDecimal"
                 android:textSize="@dimen/numSize"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="false"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:id="@+id/currencyTo"
