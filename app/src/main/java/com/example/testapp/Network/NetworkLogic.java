@@ -15,17 +15,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkLogic {
-    private static NetworkLogic instance = null;
-    public static NetworkLogic getInstance() {
-        if (instance == null) {
-            instance = new NetworkLogic();
-        }
-        return instance;
-    }
-
     private Retrofit mRetrofit;
 
-    private NetworkLogic() {
+    public NetworkLogic() {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl("https://open.exchangerate-api.com")
                 .addConverterFactory(GsonConverterFactory.create())

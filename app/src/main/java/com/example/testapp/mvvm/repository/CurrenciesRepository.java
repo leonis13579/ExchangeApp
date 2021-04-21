@@ -48,7 +48,7 @@ public class CurrenciesRepository {
     private void updateData(String fromCurrencyName) {
         for (Currencies currency : mAllCurrencies.getValue()) {
             if (currency.getName().equals(fromCurrencyName)) {
-                NetworkLogic.getInstance().getCurrencyValues(fromCurrencyName,
+                ServiceLocator.getInstance().getNetworkLogic().getCurrencyValues(fromCurrencyName,
                         (currencyValues) -> {
                             currency.setCurrencyValue(currencyValues);
                             CurrenciesDatabase.databaseWriteExecutor.execute(() -> {
