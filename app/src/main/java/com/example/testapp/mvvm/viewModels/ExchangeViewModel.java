@@ -63,7 +63,7 @@ public class ExchangeViewModel extends AndroidViewModel {
                     currencyTo.getValue() != null && !currencyTo.getValue().isEmpty()) {
                 sumTo.setValue(sumFrom.getValue() * mRepository.getCurrenciesCourse(currencyFrom.getValue(), currencyTo.getValue()));
             } else {
-                Toast.makeText(getApplication().getApplicationContext(), "Need to choose currencies first", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplication().getApplicationContext(), "Need to choose all currencies first", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
