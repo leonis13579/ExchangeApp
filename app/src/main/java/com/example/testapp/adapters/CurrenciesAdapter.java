@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testapp.R;
 import com.example.testapp.adapters.viewHolders.CurrenciesViewHolder;
+import com.example.testapp.databinding.CurrencyElementBinding;
 import com.example.testapp.mvvm.models.Currencies;
 import com.example.testapp.mvvm.views.CurrenciesFragment;
 
@@ -19,8 +20,8 @@ import java.util.List;
 
 public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesViewHolder> {
 
-    private List<String> currencies;
-    private CurrenciesFragment currenciesFragment;
+    private final List<String> currencies;
+    private final CurrenciesFragment currenciesFragment;
 
     public CurrenciesAdapter(CurrenciesFragment currenciesFragment, List<String> currencies) {
         this.currenciesFragment = currenciesFragment;
@@ -30,17 +31,19 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesViewHolder
     @NonNull
     @Override
     public CurrenciesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.currency_element, parent);
-        return new CurrenciesViewHolder(v);
+        CurrencyElementBinding ceb = CurrencyElementBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new CurrenciesViewHolder(ceb);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CurrenciesViewHolder holder, int position) {
         holder.getRadioButton().setText(currencies.get(position));
+        holder.getRadioButton().setChecked(currenciesFragment.getChangingCurrency().getValue().equals(currencies.get(position)));
         holder.getRadioButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currenciesFragment.getChangingCurrency().setValue(currencies.get(position));
+                currenciesFragment.dismiss();
             }
         });
     }

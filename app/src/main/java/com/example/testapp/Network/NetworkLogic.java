@@ -1,12 +1,12 @@
 package com.example.testapp.Network;
 
-import com.google.gson.Gson;
+import android.os.Debug;
+import android.util.Log;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,19 +35,22 @@ public class NetworkLogic {
     public void getCurrencyValues(String fromCurrencyName, Consumer<Map<String, Double>> CallBack) {
         CurrenciesAPI api = mRetrofit.create(CurrenciesAPI.class);
 
-        api.getCurrencyInfo(fromCurrencyName).enqueue(new Callback<String>() {
+        api.getCurrencyInfo(fromCurrencyName).enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Map mapResponse = new Gson().fromJson(response.body(), Map.class);
-                Object rawData = mapResponse.get("rates");
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                Object rawData = response.body().get("rates");
                 if (rawData instanceof Map) {
                     CallBack.accept((Map<String, Double>) rawData);
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                try {
+                    throw t;
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }

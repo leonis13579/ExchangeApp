@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.testapp.DI.ServiceLocator;
 import com.example.testapp.mvvm.models.Currencies;
 import com.example.testapp.mvvm.repository.CurrenciesRepository;
 
@@ -17,20 +18,16 @@ import static java.util.stream.Collectors.toList;
 public class CurrenciesViewModel extends AndroidViewModel {
 
     private CurrenciesRepository mRepository;
-    private List<Currencies> mCurrencies;
+    private LiveData<List<Currencies>> mCurrencies;
 
     public CurrenciesViewModel(@NonNull Application application) {
         super(application);
 
-        mRepository = new CurrenciesRepository(application);
+        mRepository = ServiceLocator.getInstance().getRepository();
         mCurrencies = mRepository.getAllCurrencies();
     }
 
-    public List<String> getCurrenciesNames() {
-        if (mCurrencies != null) {
-            return mCurrencies.stream().map(Currencies::getName).collect(toList());
-        }else {
-            return new ArrayList<>();
-        }
+    public LiveData<List<Currencies>> getCurrencies() {
+        return mCurrencies;
     }
 }

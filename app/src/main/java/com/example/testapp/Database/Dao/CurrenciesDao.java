@@ -14,8 +14,11 @@ import java.util.List;
 
 @Dao
 public interface CurrenciesDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Currencies currencies);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(Currencies[] currencies);
 
     @Query("DELETE FROM currencies")
     void deleteAll();

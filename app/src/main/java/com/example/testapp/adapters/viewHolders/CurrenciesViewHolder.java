@@ -12,10 +12,9 @@ public class CurrenciesViewHolder extends RecyclerView.ViewHolder{
 
     RadioButton radioButton;
 
-    public CurrenciesViewHolder(@NonNull View itemView) {
-        super(itemView);
-        CurrencyElementBinding binding = CurrencyElementBinding.bind(itemView);
-        radioButton = binding.rButton;
+    public CurrenciesViewHolder(CurrencyElementBinding ceb) {
+        super(ceb.getRoot());
+        radioButton = ceb.rButton;
     }
 
     public RadioButton getRadioButton() {

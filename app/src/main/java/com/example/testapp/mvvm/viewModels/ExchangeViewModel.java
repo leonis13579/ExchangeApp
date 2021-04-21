@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.testapp.DI.ServiceLocator;
 import com.example.testapp.R;
 import com.example.testapp.mvvm.models.Currencies;
 import com.example.testapp.mvvm.repository.CurrenciesRepository;
@@ -27,7 +28,7 @@ public class ExchangeViewModel extends AndroidViewModel {
     public ExchangeViewModel(final Application application) {
         super(application);
 
-        mRepository = new CurrenciesRepository(application);
+        mRepository = ServiceLocator.getInstance().getRepository();
     }
 
     public void ChangeCurrency() {
@@ -57,11 +58,15 @@ public class ExchangeViewModel extends AndroidViewModel {
     }
 
     public void CountSumTo() {
-        if (currencyFrom.getValue() != null && !currencyFrom.getValue().isEmpty() &&
-                currencyTo.getValue() != null && !currencyTo.getValue().isEmpty()) {
-            sumTo.setValue(sumFrom.getValue() * mRepository.getCurrenciesCourse(currencyFrom.getValue(), currencyTo.getValue()));
-        } else {
-            Toast.makeText(getApplication().getApplicationContext(), "Need to choose currencies first", Toast.LENGTH_LONG).show();
+        try {
+            if (currencyFrom.getValue() != null && !currencyFrom.getValue().isEmpty() &&
+                    currencyTo.getValue() != null && !currencyTo.getValue().isEmpty()) {
+                sumTo.setValue(sumFrom.getValue() * mRepository.getCurrenciesCourse(currencyFrom.getValue(), currencyTo.getValue()));
+            } else {
+                Toast.makeText(getApplication().getApplicationContext(), "Need to choose currencies first", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

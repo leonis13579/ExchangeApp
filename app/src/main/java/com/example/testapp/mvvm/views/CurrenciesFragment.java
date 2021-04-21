@@ -11,12 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.testapp.adapters.CurrenciesAdapter;
 import com.example.testapp.databinding.CurrenciesFragmentBinding;
 import com.example.testapp.mvvm.models.Currencies;
 import com.example.testapp.mvvm.viewModels.CurrenciesViewModel;
 import com.example.testapp.mvvm.viewModels.ExchangeViewModel;
+
+import static java.util.stream.Collectors.toList;
 
 public class CurrenciesFragment extends DialogFragment {
     private CurrenciesViewModel mViewModel;
@@ -33,6 +36,8 @@ public class CurrenciesFragment extends DialogFragment {
         binding = CurrenciesFragmentBinding.inflate(inflater, container, false);
         View v = binding.getRoot();
 
+        binding.currenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         binding.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,13 +53,22 @@ public class CurrenciesFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CurrenciesViewModel.class);
 
-        binding.currenciesRecyclerView.setAdapter(new CurrenciesAdapter(this, mViewModel.getCurrenciesNames()));
+        mViewModel.getCurrencies().observe(getViewLifecycleOwner(), currencies -> {
+            binding.currenciesRecyclerView.setAdapter(
+                    new CurrenciesAdapter(
+                            this,
+                            currencies.stream().map(Currencies::getName).collect(toList())
+                            )
+                    );
+            }
+        );
 
         binding.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (changingCurrency.getValue() != null && !changingCurrency.getValue().equals("")) {
+
                     dismiss();
                 } else {
                     Toast.makeText(getContext(), "Need to choose a currency", Toast.LENGTH_LONG).show();

@@ -43,9 +43,11 @@ public class ExchangeFragment extends Fragment {
 
         mViewModel.getCurrencyFrom().observe(getViewLifecycleOwner(), currency -> {
             binding.currencyFromText.setText(currency);
+            mViewModel.CountSumTo();
         });
         mViewModel.getCurrencyTo().observe(getViewLifecycleOwner(), currency -> {
             binding.currencyToText.setText(currency);
+            mViewModel.CountSumTo();
         });
 
         mViewModel.getSumFrom().observe(getViewLifecycleOwner(), sumFrom -> {
@@ -64,6 +66,7 @@ public class ExchangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mViewModel.ChangeCurrency();
+                mViewModel.CountSumTo();
             }
         });
 
